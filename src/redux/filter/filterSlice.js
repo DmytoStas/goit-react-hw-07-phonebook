@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-const initialState = '';
+import { initialFilter } from 'redux/initialState';
 
 export const filterSlice = createSlice({
   name: 'contactsFilter',
-  initialState,
+  initialState: initialFilter,
   reducers: {
     toggleFilter: (state, action) => {
       return (state = action.payload);

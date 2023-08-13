@@ -1,10 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import contactsReducer from '../redux/contactsSlice';
-import filterReducer from '../redux/filterSlice';
+import phonebookReducer from './contacts/phonebookSlice';
+import filterReducer from './filter/filterSlice';
 
 const rootReducer = combineReducers({
-  contacts: contactsReducer,
+  phonebook: phonebookReducer,
   filter: filterReducer,
 });
 

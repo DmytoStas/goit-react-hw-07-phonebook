@@ -1,15 +1,29 @@
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getContacts, getFilter } from 'redux/selectors';
-import { removeContact } from '../../redux/contactsSlice';
+import Loader from '../Loader/Loader';
+
+import {
+  getContacts,
+  getFilter,
+  getIsLoading,
+  getError,
+} from 'redux/selectors';
 
 import { ContactsListUl, ListItemWrapp } from './ContactsList.styled';
+import { useEffect } from 'react';
+import { fetchPhonebook, deleteContact } from 'redux/phonebookOperations';
 
 function ContactsList() {
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPhonebook());
+  }, [dispatch]);
 
   const visibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -20,27 +34,30 @@ function ContactsList() {
   };
 
   return (
-    <ContactsListUl>
-      {visibleContacts().map(contact => (
-        <li key={contact.id}>
-          <ListItemWrapp>
-            <p>
-              {contact.name}: <span>{contact.number}</span>
-            </p>
+    <>
+      {isLoading && !error && <Loader />}
+      <ContactsListUl>
+        {visibleContacts().map(contact => (
+          <li key={contact.id}>
+            <ListItemWrapp>
+              <p>
+                {contact.name}: <span>{contact.number}</span>
+              </p>
 
-            <button
-              type="button"
-              id={contact.id}
-              onClick={() => {
-                dispatch(removeContact(`${contact.id}`));
-              }}
-            >
-              Delete
-            </button>
-          </ListItemWrapp>
-        </li>
-      ))}
-    </ContactsListUl>
+              <button
+                type="button"
+                id={contact.id}
+                onClick={() => {
+                  dispatch(deleteContact(`${contact.id}`));
+                }}
+              >
+                Delete
+              </button>
+            </ListItemWrapp>
+          </li>
+        ))}
+      </ContactsListUl>
+    </>
   );
 }
 
